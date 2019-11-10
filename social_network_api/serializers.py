@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from social_network_api.models import Account
+from social_network_api.models import Account, Post
 from django.contrib.auth.models import User
 
 
@@ -48,3 +48,11 @@ class AccountRegistrationSerializer(serializers.ModelSerializer):
         )
         account.save()
         return account
+
+
+class PostDetailSerializer(serializers.ModelSerializer):
+    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = Post
+        fields = ('title', 'description', 'image', 'created_by')
