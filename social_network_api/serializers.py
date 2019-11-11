@@ -1,6 +1,18 @@
 from rest_framework import serializers
 from social_network_api.models import Account, Post
 from django.contrib.auth.models import User
+import requests
+
+
+def is_exist_email(email):
+    key = 'YOUR_API_KEY'
+    response = requests.get('https://api.hunter.io/v2/email-verifier',
+                            params={'email': str(email), 'api_key': key})
+    json_response = response.json()
+    if json_response['data']['result'] in ("deliverable", "risky"):
+        return True
+    else:
+        return False
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -18,8 +30,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             username=self.validated_data['username'],
             first_name=self.validated_data['first_name'],
             last_name=self.validated_data['last_name'],
-            email=self.validated_data['email'],
         )
+        email = self.validated_data['email']
+        if is_exist_email(email):
+            user.email = email
+        else:
+            raise serializers.ValidationError({'email': 'Email does not exist.'})
         password = self.validated_data['password']
         password_confirm = self.validated_data['password_confirm']
         if password != password_confirm:

@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
@@ -11,7 +10,6 @@ from social_network_api.serializers import AccountRegistrationSerializer, PostDe
 class RegistrationView(APIView):
     def post(self, request):
         serializer = AccountRegistrationSerializer(data=request.data)
-        print(serializer)
         data = {}
         if serializer.is_valid():
             account = serializer.save()
