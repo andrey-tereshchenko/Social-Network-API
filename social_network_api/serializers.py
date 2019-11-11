@@ -56,3 +56,20 @@ class PostDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('title', 'description', 'image', 'created_by')
+
+
+class PostLikeSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField()
+
+    class Meta:
+        model = Post
+        fields = ('user_id',)
+
+    def update(self, instance, validated_data):
+        user = User.objects.filter(id=validated_data['user_id']).first()
+        if user in instance.users_likes.all():
+            instance.users_likes.remove(user)
+        else:
+            instance.users_likes.add(user)
+        instance.save()
+        return instance
