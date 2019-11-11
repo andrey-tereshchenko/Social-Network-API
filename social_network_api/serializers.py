@@ -5,7 +5,8 @@ import requests
 
 
 def is_exist_email(email):
-    key = 'YOUR_API_KEY'
+    # key = 'YOUR_API_KEY'
+    key = '2dbe554afec56ebe7e693509562d80d4b9b0ebfc'
     response = requests.get('https://api.hunter.io/v2/email-verifier',
                             params={'email': str(email), 'api_key': key})
     json_response = response.json()
@@ -68,6 +69,7 @@ class AccountRegistrationSerializer(serializers.ModelSerializer):
 
 class PostDetailSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    image = serializers.ImageField(allow_empty_file=True, required=False)
 
     class Meta:
         model = Post

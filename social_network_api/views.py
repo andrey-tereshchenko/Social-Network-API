@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 
 from social_network_api.models import Post
@@ -18,7 +18,7 @@ class RegistrationView(APIView):
             data['email'] = account.user.email
         else:
             data = serializer.errors
-        return Response(data)
+        return Response(data, status=status.HTTP_201_CREATED)
 
 
 class PostCreateView(generics.CreateAPIView):
